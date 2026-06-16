@@ -228,3 +228,50 @@ font-family: "Bungee Spice", sans-serif;
 
     
 }
+
+
+#ver-mapa {
+
+flex-direction: column;
+align-items: center;
+justify-content:  center;
+
+}
+
+#mapa {
+
+
+margin: 40px;
+border: 2px solid white;
+
+}
+
+#mover-Derecha {
+    
+     width: 150px;
+    height:40px;
+    border-radius: 20px;
+
+}
+
+#mover-Izquierda {
+    
+     width: 150px;
+    height:40px;
+    border-radius: 20px;
+
+}
+#mover-Arriba {
+    
+     width: 150px;
+    height:40px;
+    border-radius: 20px;
+
+}
+#mover-Abajo {
+    
+     width: 150px;
+    height:40px;
+    border-radius: 20px;
+
+}
