@@ -4,6 +4,7 @@ let sectionSeleccionarAtaque = document.getElementById("seleccionar-ataque")
 let sectionBotonReiniciar = document.getElementById("reiniciar")
 let mascotases = document.getElementById("mascotases")
 
+let mascotaJugadorObjeto
 
 
 
@@ -34,30 +35,50 @@ let mokepones = []
 
 class Mokepon {
     
-    constructor(nombre, foto, vida) {
+    constructor(nombre, foto, vida,fotoMapa, x = 10, y = 10, ancho = 80, alto = 80) {
         this.nombre = nombre
         this.foto = foto 
         this.vida = vida
         this.ataques = []
-        this.x = 20
-        this.y = 20
-        this.ancho = 80
-        this.alto = 80
+        this.x = x
+        this.y = y
+        this.ancho = ancho
+        this.alto = alto
         this.mapaFoto = new Image()
-        this.mapaFoto.src = foto
+        this.mapaFoto.src = fotoMapa
         this.VelocidadY = 0
         this.VelocidadX = 0
         
     }
+
+pintarMokepon() {
+
+        lienzo.drawImage(
+        this.mapaFoto,
+        this.x,
+        this.y,
+        this.ancho,
+        this.alto
+    )
+
+}
+
+
 }
 
 
 
-let GatoMarciano = new Mokepon('GatoMarciano', './assets/marcianillo.png',5 )
+let GatoMarciano = new Mokepon('GatoMarciano', './assets/marcianillo.png',5, './assets/marcianilloVaquero.png',55, 450, 130, 130 )
 
-let cuche = new Mokepon('Cuche','./assets/cochino.png', 5 )
+let cuche = new Mokepon('Cuche','./assets/cochino.png', 5,'./assets/cochino.png' ,55, 450 )
 
-let Mapache = new Mokepon('Mapache','./assets/mapache.png', 5 )
+let Mapache = new Mokepon('Mapache','./assets/mapache.png', 5,'./assets/mapacheVaquero.png' ,55, 450,130,130 )
+
+let GatoMarcianoEnemigo = new Mokepon('GatoMarciano', './assets/marcianillo.png',5,'./assets/toroMalo1.png',600, 300, 130, 130 )
+
+let cucheEnemigo = new Mokepon('Cuche','./assets/cochino.png', 5, './assets/toroMalo2.png', 700, 400, 130, 130)
+
+let MapacheEnemigo = new Mokepon('Mapache','./assets/mapache.png', 5, './assets/toroMalo3.png', 600, 470, 130, 130)
 
 let lienzo = mapa.getContext("2d")
 
@@ -182,43 +203,23 @@ botonReiniciar.addEventListener('click', reiniciarJuego)
 }
 
 function seleccionarMascotaJugador() {
+    let mascotaSeleccionada = document.querySelector('input[name="mascota"]:checked')
+    let spanMascotaJugador = document.getElementById('mascota-jugador')
 
+    if (mascotaSeleccionada) {
+        spanMascotaJugador.innerHTML = mascotaSeleccionada.id
 
-    sectionSeleccionarMascota.style.display = "none"
-    
-    sectionVerMapa.style.display = 'flex'
+        mascotaJugadorObjeto = mokepones.find((mokepon) => mokepon.nombre === mascotaSeleccionada.id)
 
-    iniciarMapa()
-    //lienzo.fillRect(20,10,100,100) 
-pintarCanvas ()
+        sectionSeleccionarMascota.style.display = "none"
+        sectionVerMapa.style.display = 'flex'
+        sectionSeleccionarAtaque.style.display = "none"
 
-     //la acabo de agregar
-
-    sectionSeleccionarAtaque.style.display = "none" //le puse block
-
-let imputHipodogue = document.getElementById('GatoMarciano') //  con esto puedo poner codigo aqui y no meterlo al condicional del if para en el if tener la logica basica 
-let imputCapipepo = document.getElementById('Cuche')
-let imputRatigueya = document.getElementById('Mapache')
-let spanMascotaJugador = document.getElementById('mascota-jugador')
-
-    if (imputHipodogue.checked) {
-    
-    spanMascotaJugador.innerHTML = imputHipodogue.id
-        
-
-} else if (imputCapipepo.checked) {
-    spanMascotaJugador.innerHTML = imputCapipepo.id
-    
-} else if (imputRatigueya.checked) {
-    spanMascotaJugador.innerHTML = imputRatigueya.id
-} else {
-    alert('Selecciona una mascota')
-
-}
-
-   
-seleccionarMascotaEnemigo()
-
+        iniciarMapa()
+        seleccionarMascotaEnemigo()
+    } else {
+        alert('Selecciona una mascota')
+    }
 }
 
 function seleccionarMascotaEnemigo() {
@@ -365,9 +366,11 @@ function aleatorio(min, max) {
 
 
 function pintarCanvas () {
-    GatoMarciano.y = GatoMarciano.y + GatoMarciano.VelocidadY
-    GatoMarciano.x = GatoMarciano.x + GatoMarciano.VelocidadX
+    mascotaJugadorObjeto.y = mascotaJugadorObjeto.y + mascotaJugadorObjeto.VelocidadY
+    mascotaJugadorObjeto.x = mascotaJugadorObjeto.x + mascotaJugadorObjeto.VelocidadX
+
     lienzo.clearRect(0, 0, mapa.width, mapa.height)
+
     lienzo.drawImage(
         mapaBackground,
         0,
@@ -375,59 +378,45 @@ function pintarCanvas () {
         mapa.width,
         mapa.height
     )
-    lienzo.drawImage(
-    GatoMarciano.mapaFoto,
-    GatoMarciano.x,
-    GatoMarciano.y,
-    GatoMarciano.ancho,
-    GatoMarciano.alto
-    )
- 
+
+   mascotaJugadorObjeto.pintarMokepon()
+   GatoMarcianoEnemigo.pintarMokepon()
+   cucheEnemigo.pintarMokepon()
+   MapacheEnemigo.pintarMokepon()
+
+   if (mascotaJugadorObjeto.VelocidadX !== 0 || mascotaJugadorObjeto.VelocidadY !== 0) {
+
+    revisarColision(GatoMarcianoEnemigo)
+    revisarColision(cucheEnemigo)
+    revisarColision(MapacheEnemigo)
+   }
+
 }
 
 
 
 
 function moverGatoDerecha () {
-
-    GatoMarciano.VelocidadX = 5
-
-// GatoMarciano.x = GatoMarciano.x + 5
-pintarCanvas()
-
+    mascotaJugadorObjeto.VelocidadX = 5
 }
-
 
 function moverGatoIzquierda () {
-
-     GatoMarciano.VelocidadX = - 5
-// GatoMarciano.x = GatoMarciano.x - 5
- pintarCanvas()
- 
-
-
+    mascotaJugadorObjeto.VelocidadX = -5
 }
+
 function moverGatoArriba () {
-
-    GatoMarciano.VelocidadY = - 5
-// GatoMarciano.x = GatoMarciano.x - 5
-pintarCanvas()
-
+    mascotaJugadorObjeto.VelocidadY = -5
 }
 
 function moverGatoAbajo () {
-
-    GatoMarciano.VelocidadY = 5
-pintarCanvas()
-
+    mascotaJugadorObjeto.VelocidadY = 5
 }
 
 function detenerMovimiento () {
-
-    GatoMarciano.VelocidadX = 0
-    GatoMarciano.VelocidadY = 0
-
+    mascotaJugadorObjeto.VelocidadX = 0
+    mascotaJugadorObjeto.VelocidadY = 0
 }
+
 
 function sePresionoUnaTecla(event) {
 
@@ -458,14 +447,43 @@ switch (event.key) {
 
 function iniciarMapa() {
 
-    mapa.width = 800
-    mapa.height = 600 
+    mapa.width = 850
+    mapa.height = 600
 
     window.addEventListener('keydown',sePresionoUnaTecla)
     window.addEventListener('keyup',detenerMovimiento)
 
     intervalo = setInterval(pintarCanvas, 50)
 
+}
+
+function revisarColision(enemigo) {
+        const arribaEnemigo = enemigo.y
+        const abajoEnemigo = enemigo.y + enemigo.alto
+        const derechaEnemigo = enemigo.x + enemigo.ancho
+        const izquierdaEnemigo = enemigo.x 
+
+
+      const arribaMascota = mascotaJugadorObjeto.y
+        const abajoMascota = mascotaJugadorObjeto.y + mascotaJugadorObjeto.alto
+        const derechaMascota = mascotaJugadorObjeto.x + mascotaJugadorObjeto.ancho
+        const izquierdaMascota = mascotaJugadorObjeto.x 
+
+
+    if (
+    abajoMascota < arribaEnemigo ||
+    arribaMascota > abajoEnemigo ||
+    derechaMascota < izquierdaEnemigo ||
+    izquierdaMascota > derechaEnemigo 
+    ) {
+
+        return
+    }
+
+        detenerMovimiento()
+        
+        sectionSeleccionarAtaque.style.display = 'flex'
+        sectionVerMapa.style.display = 'none'
 }
 
 
