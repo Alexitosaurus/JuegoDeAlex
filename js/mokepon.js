@@ -35,30 +35,50 @@ let mokepones = []
 
 class Mokepon {
     
-    constructor(nombre, foto, vida) {
+    constructor(nombre, foto, vida,fotoMapa, x = 10, y = 10, ancho = 80, alto = 80) {
         this.nombre = nombre
         this.foto = foto 
         this.vida = vida
         this.ataques = []
-        this.x = 20
-        this.y = 20
-        this.ancho = 80
-        this.alto = 80
+        this.x = x
+        this.y = y
+        this.ancho = ancho
+        this.alto = alto
         this.mapaFoto = new Image()
-        this.mapaFoto.src = foto
+        this.mapaFoto.src = fotoMapa
         this.VelocidadY = 0
         this.VelocidadX = 0
         
     }
+
+pintarMokepon() {
+
+        lienzo.drawImage(
+        this.mapaFoto,
+        this.x,
+        this.y,
+        this.ancho,
+        this.alto
+    )
+
+}
+
+
 }
 
 
 
-let GatoMarciano = new Mokepon('GatoMarciano', './assets/marcianillo.png',5 )
+let GatoMarciano = new Mokepon('GatoMarciano', './assets/marcianillo.png',5, './assets/marcianilloVaquero.png',55, 450, 130, 130 )
 
-let cuche = new Mokepon('Cuche','./assets/cochino.png', 5 )
+let cuche = new Mokepon('Cuche','./assets/cochino.png', 5,'./assets/cochino.png' ,55, 450 )
 
-let Mapache = new Mokepon('Mapache','./assets/mapache.png', 5 )
+let Mapache = new Mokepon('Mapache','./assets/mapache.png', 5,'./assets/mapacheVaquero.png' ,55, 450,130,130 )
+
+let GatoMarcianoEnemigo = new Mokepon('GatoMarciano', './assets/marcianillo.png',5,'./assets/toroMalo1.png',600, 300, 130, 130 )
+
+let cucheEnemigo = new Mokepon('Cuche','./assets/cochino.png', 5, './assets/toroMalo2.png', 700, 400, 130, 130)
+
+let MapacheEnemigo = new Mokepon('Mapache','./assets/mapache.png', 5, './assets/toroMalo3.png', 600, 470, 130, 130)
 
 let lienzo = mapa.getContext("2d")
 
@@ -359,13 +379,10 @@ function pintarCanvas () {
         mapa.height
     )
 
-    lienzo.drawImage(
-        mascotaJugadorObjeto.mapaFoto,
-        mascotaJugadorObjeto.x,
-        mascotaJugadorObjeto.y,
-        mascotaJugadorObjeto.ancho,
-        mascotaJugadorObjeto.alto
-    )
+   mascotaJugadorObjeto.pintarMokepon()
+   GatoMarcianoEnemigo.pintarMokepon()
+   cucheEnemigo.pintarMokepon()
+   MapacheEnemigo.pintarMokepon()
 }
 
 
@@ -422,8 +439,8 @@ switch (event.key) {
 
 function iniciarMapa() {
 
-    mapa.width = 800
-    mapa.height = 600 
+    mapa.width = 850
+    mapa.height = 600
 
     window.addEventListener('keydown',sePresionoUnaTecla)
     window.addEventListener('keyup',detenerMovimiento)
