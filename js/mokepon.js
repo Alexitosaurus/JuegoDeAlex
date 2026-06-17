@@ -4,6 +4,7 @@ let sectionSeleccionarAtaque = document.getElementById("seleccionar-ataque")
 let sectionBotonReiniciar = document.getElementById("reiniciar")
 let mascotases = document.getElementById("mascotases")
 
+let mascotaJugadorObjeto
 
 
 
@@ -182,43 +183,23 @@ botonReiniciar.addEventListener('click', reiniciarJuego)
 }
 
 function seleccionarMascotaJugador() {
+    let mascotaSeleccionada = document.querySelector('input[name="mascota"]:checked')
+    let spanMascotaJugador = document.getElementById('mascota-jugador')
 
+    if (mascotaSeleccionada) {
+        spanMascotaJugador.innerHTML = mascotaSeleccionada.id
 
-    sectionSeleccionarMascota.style.display = "none"
-    
-    sectionVerMapa.style.display = 'flex'
+        mascotaJugadorObjeto = mokepones.find((mokepon) => mokepon.nombre === mascotaSeleccionada.id)
 
-    iniciarMapa()
-    //lienzo.fillRect(20,10,100,100) 
-pintarCanvas ()
+        sectionSeleccionarMascota.style.display = "none"
+        sectionVerMapa.style.display = 'flex'
+        sectionSeleccionarAtaque.style.display = "none"
 
-     //la acabo de agregar
-
-    sectionSeleccionarAtaque.style.display = "none" //le puse block
-
-let imputHipodogue = document.getElementById('GatoMarciano') //  con esto puedo poner codigo aqui y no meterlo al condicional del if para en el if tener la logica basica 
-let imputCapipepo = document.getElementById('Cuche')
-let imputRatigueya = document.getElementById('Mapache')
-let spanMascotaJugador = document.getElementById('mascota-jugador')
-
-    if (imputHipodogue.checked) {
-    
-    spanMascotaJugador.innerHTML = imputHipodogue.id
-        
-
-} else if (imputCapipepo.checked) {
-    spanMascotaJugador.innerHTML = imputCapipepo.id
-    
-} else if (imputRatigueya.checked) {
-    spanMascotaJugador.innerHTML = imputRatigueya.id
-} else {
-    alert('Selecciona una mascota')
-
-}
-
-   
-seleccionarMascotaEnemigo()
-
+        iniciarMapa()
+        seleccionarMascotaEnemigo()
+    } else {
+        alert('Selecciona una mascota')
+    }
 }
 
 function seleccionarMascotaEnemigo() {
@@ -365,9 +346,11 @@ function aleatorio(min, max) {
 
 
 function pintarCanvas () {
-    GatoMarciano.y = GatoMarciano.y + GatoMarciano.VelocidadY
-    GatoMarciano.x = GatoMarciano.x + GatoMarciano.VelocidadX
+    mascotaJugadorObjeto.y = mascotaJugadorObjeto.y + mascotaJugadorObjeto.VelocidadY
+    mascotaJugadorObjeto.x = mascotaJugadorObjeto.x + mascotaJugadorObjeto.VelocidadX
+
     lienzo.clearRect(0, 0, mapa.width, mapa.height)
+
     lienzo.drawImage(
         mapaBackground,
         0,
@@ -375,59 +358,40 @@ function pintarCanvas () {
         mapa.width,
         mapa.height
     )
+
     lienzo.drawImage(
-    GatoMarciano.mapaFoto,
-    GatoMarciano.x,
-    GatoMarciano.y,
-    GatoMarciano.ancho,
-    GatoMarciano.alto
+        mascotaJugadorObjeto.mapaFoto,
+        mascotaJugadorObjeto.x,
+        mascotaJugadorObjeto.y,
+        mascotaJugadorObjeto.ancho,
+        mascotaJugadorObjeto.alto
     )
- 
 }
 
 
 
 
 function moverGatoDerecha () {
-
-    GatoMarciano.VelocidadX = 5
-
-// GatoMarciano.x = GatoMarciano.x + 5
-pintarCanvas()
-
+    mascotaJugadorObjeto.VelocidadX = 5
 }
-
 
 function moverGatoIzquierda () {
-
-     GatoMarciano.VelocidadX = - 5
-// GatoMarciano.x = GatoMarciano.x - 5
- pintarCanvas()
- 
-
-
+    mascotaJugadorObjeto.VelocidadX = -5
 }
+
 function moverGatoArriba () {
-
-    GatoMarciano.VelocidadY = - 5
-// GatoMarciano.x = GatoMarciano.x - 5
-pintarCanvas()
-
+    mascotaJugadorObjeto.VelocidadY = -5
 }
 
 function moverGatoAbajo () {
-
-    GatoMarciano.VelocidadY = 5
-pintarCanvas()
-
+    mascotaJugadorObjeto.VelocidadY = 5
 }
 
 function detenerMovimiento () {
-
-    GatoMarciano.VelocidadX = 0
-    GatoMarciano.VelocidadY = 0
-
+    mascotaJugadorObjeto.VelocidadX = 0
+    mascotaJugadorObjeto.VelocidadY = 0
 }
+
 
 function sePresionoUnaTecla(event) {
 
