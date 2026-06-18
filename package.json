@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Alexitosaurus/JuegoDeAlex/issues"
   },
-  "homepage": "https://github.com/Alexitosaurus/JuegoDeAlex#readme"
+  "homepage": "https://github.com/Alexitosaurus/JuegoDeAlex#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
 }
