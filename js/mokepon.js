@@ -4,6 +4,8 @@ let sectionSeleccionarAtaque = document.getElementById("seleccionar-ataque")
 let sectionBotonReiniciar = document.getElementById("reiniciar")
 let mascotases = document.getElementById("mascotases")
 
+
+
 let mascotaJugadorObjeto
 
 
@@ -199,6 +201,25 @@ botonTierra.addEventListener('click', ataqueTierra)
 let botonReiniciar = document.getElementById("boton-reiniciar")
 botonReiniciar.addEventListener('click', reiniciarJuego)
 
+unirseAlJuego() 
+}
+
+function unirseAlJuego() {
+
+    fetch ("http://localhost:8080/unirse")
+    .then(function (res) {
+      
+        if (res.ok) {
+
+            res.text()
+                .then(function(res) {
+
+                    console.log(res)
+
+                })
+        }
+
+    })
 
 }
 
