@@ -21,8 +21,10 @@ let BotonMoverAbajo = document.getElementById("mover-Abajo")
 let opcionDeMokepones 
    
 
-let ataqueJuagador
+let ataqueJugador
 let ataqueEnemigo
+
+let jugadorId = null
 
 let vidasJugador = 3
 let vidasEnemigo = 3
@@ -212,9 +214,9 @@ function unirseAlJuego() {
         if (res.ok) {
 
             res.text()
-                .then(function(res) {
-
-                    console.log(res)
+                .then(function(respuesta) {
+                    console.log(respuesta)
+                    jugadorId = (respuesta)
 
                 })
         }
@@ -225,7 +227,7 @@ function unirseAlJuego() {
 
 function seleccionarMascotaJugador() {
     let mascotaSeleccionada = document.querySelector('input[name="mascota"]:checked')
-    let spanMascotaJugador = document.getElementById('mascota-jugador')
+    let spanMascotaJugador = document.getElementById('mascotaJugador')
 
     if (mascotaSeleccionada) {
         spanMascotaJugador.innerHTML = mascotaSeleccionada.id
@@ -236,12 +238,31 @@ function seleccionarMascotaJugador() {
         sectionVerMapa.style.display = 'flex'
         sectionSeleccionarAtaque.style.display = "none"
 
+
+        seleccionarMokepon(mascotaSeleccionada.id) 
+
         iniciarMapa()
         seleccionarMascotaEnemigo()
     } else {
         alert('Selecciona una mascota')
     }
 }
+
+    function seleccionarMokepon (mascotaJugador) {
+
+        fetch(`http://localhost:8080/mokepon/${jugadorId}`, {
+            method: "post",
+            headers: {
+
+                "Content-Type": "application/json"
+
+            },
+            body: JSON.stringify({
+                mokepon: mascotaJugador
+            })
+        })
+
+    }
 
 function seleccionarMascotaEnemigo() {
 
