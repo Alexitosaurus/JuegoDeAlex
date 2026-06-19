@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Alexitosaurus/JuegoDeAlex#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "install": "^0.13.0"
   }
 }
