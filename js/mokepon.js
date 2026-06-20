@@ -13,6 +13,10 @@ let mascotaJugadorObjeto
 let sectionVerMapa = document.getElementById("ver-mapa")
 let mapa = document.getElementById("mapa")
 
+
+let mokeponesEnemigos = []
+
+
 let BotonMoverDerecha = document.getElementById("mover-Derecha")
 let BotonMoverIzquierda = document.getElementById("mover-Izquierda")
 let BotonMoverArriba = document.getElementById("mover-Arriba")
@@ -39,7 +43,8 @@ let mokepones = []
 
 class Mokepon {
     
-    constructor(nombre, foto, vida,fotoMapa, x = 10, y = 10, ancho = 80, alto = 80) {
+    constructor(nombre, foto, vida,fotoMapa, x = 10, y = 10, ancho = 80, alto = 80, id = null) {
+        this.id = id
         this.nombre = nombre
         this.foto = foto 
         this.vida = vida
@@ -78,42 +83,45 @@ let cuche = new Mokepon('Cuche','./assets/cochino.png', 5,'./assets/cochino.png'
 
 let Mapache = new Mokepon('Mapache','./assets/mapache.png', 5,'./assets/mapacheVaquero.png' ,55, 450,130,130 )
 
-let GatoMarcianoEnemigo = new Mokepon('GatoMarciano', './assets/marcianillo.png',5,'./assets/toroMalo1.png',600, 300, 130, 130 )
-
-let cucheEnemigo = new Mokepon('Cuche','./assets/cochino.png', 5, './assets/toroMalo2.png', 700, 400, 130, 130)
-
-let MapacheEnemigo = new Mokepon('Mapache','./assets/mapache.png', 5, './assets/toroMalo3.png', 600, 470, 130, 130)
 
 let lienzo = mapa.getContext("2d")
 
 
+const GATOMARCIANO_ATAQUES = [
 
-//mokepones.push(GatoMarciano, cuche, Mapache)
-
-//console.log(GatoMarciano, cuche, Mapache)
-GatoMarciano.ataques.push(
-    { nombre: '💦', id: 'boton-agua' },
+        { nombre: '💦', id: 'boton-agua' },
     { nombre: '💦', id: 'boton-agua' },
     { nombre: '💦', id: 'boton-agua'},
     { nombre: '🔥', id: 'boton-fuego'},
     { nombre: '🪾', id: 'boton-tierra' },
-)
 
-Mapache.ataques.push(
-    { nombre: '🪾', id: 'boton-tierra' },
+]
+
+
+const MAPACHE_ATAQUES = [
+ { nombre: '🪾', id: 'boton-tierra' },
     { nombre: '🪾', id: 'boton-tierra' },
     { nombre: '🪾', id: 'boton-tierra' },
     { nombre: '💦', id: 'boton-agua'},
     { nombre: '🔥', id: 'boton-fuego'},
     
-)
-cuche.ataques.push(
-    { nombre: '🔥', id: 'boton-fuego'},
+
+]
+
+const CUCHE_ATAQUES = [
+        { nombre: '🔥', id: 'boton-fuego'},
     { nombre: '🔥', id: 'boton-fuego'},
     { nombre: '🔥', id: 'boton-fuego'},
     { nombre: '💦', id: 'boton-agua'},
     { nombre: '🪾', id: 'boton-tierra' },
-)
+
+] 
+//mokepones.push(GatoMarciano, cuche, Mapache)
+
+//console.log(GatoMarciano, cuche, Mapache)
+GatoMarciano.ataques.push(...GATOMARCIANO_ATAQUES)
+Mapache.ataques.push(...MAPACHE_ATAQUES)
+cuche.ataques.push(...CUCHE_ATAQUES)
 
 //console.log(GatoMarciano.ataques)
 
@@ -423,12 +431,14 @@ function pintarCanvas () {
 
    mascotaJugadorObjeto.pintarMokepon()
 
-    enviarPosicion(mascotaJugadorObjeto.y, mascotaJugadorObjeto.x)
+    enviarPosicion(mascotaJugadorObjeto.x, mascotaJugadorObjeto.y)
 
 
-   GatoMarcianoEnemigo.pintarMokepon()
-   cucheEnemigo.pintarMokepon()
-   MapacheEnemigo.pintarMokepon()
+    mokeponesEnemigos.forEach(function (mokepon){
+
+        mokepon.pintarMokepon()
+
+    }) 
 
    if (mascotaJugadorObjeto.VelocidadX !== 0 || mascotaJugadorObjeto.VelocidadY !== 0) {
 
@@ -451,6 +461,47 @@ function enviarPosicion(x, y) {
             y
         })
     } )
+
+    .then(function (res) {
+
+        if (res.ok) {
+            res.json()
+                .then(function ({enemigos}) {
+
+                    console.log(enemigos)
+                    
+                   mokeponesEnemigos = enemigos.map(function (enemigo) {
+                        let mokeponEnemigo = null
+                        const mokeponNombre = enemigo.mokepon?.nombre || ""
+
+                        if (mokeponNombre === GatoMarciano.nombre) {
+
+                        mokeponEnemigo = new Mokepon('GatoMarciano', './assets/marcianillo.png',5,'./assets/toroMalo1.png',600, 300, 130, 130 )
+
+                        } else if (mokeponNombre === cuche.nombre) {
+
+                        mokeponEnemigo = new Mokepon('Cuche','./assets/cochino.png', 5, './assets/toroMalo2.png', 700, 400, 130, 130)
+
+                        } else if (mokeponNombre === Mapache.nombre) {
+
+                        mokeponEnemigo = new Mokepon('Mapache','./assets/mapache.png', 5, './assets/toroMalo3.png', 600, 470, 130, 130)
+
+                        }
+                       
+
+                        mokeponEnemigo.x = enemigo.x
+                        mokeponEnemigo.y = enemigo.y
+
+                         return mokeponEnemigo
+                    })
+
+
+
+                })
+        }
+
+        
+    })
 
 }
 
